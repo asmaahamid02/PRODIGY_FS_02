@@ -15,3 +15,80 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  @@map(name: "users")
+  id                 String              @id @default(uuid())
+  firstName          String              @db.VarChar(255)
+  lastName           String              @db.VarChar(255)
+  email              String            
+  password           String
+  role               RoleEnum            @default(user)
+  employeeId         String?             @unique
+
+  //relations
+  employee           Employee?           @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@unique([email])
+  @@index([email])
+}
+
+enum RoleEnum {
+  user 
+  admin
+}
+
+model Employee {
+  @@map("employees")
+  id                   String            @id @default(uuid())
+  phone                String?
+  hireDate             DateTime
+  jobTitle             String
+  salary               Float   
+  managerId            String?           @unique
+  roleId               String
+  departmentId         String?
+
+  //relations
+  user                 User? 
+  role                 Role              @relation(fields: [roleId], references: [id], onDelete: Restrict) 
+  manager              Employee?         @relation("EmployeeManagers", fields: [managerId], references: [id], onDelete: SetNull)
+  subordinates         Employee[]        @relation("EmployeeManagers")
+  department           Department?       @relation("departmentEmployees", fields: [departmentId], references: [id], onDelete: SetNull)
+  departmentManagers   Department[]      @relation("DepartmentManagers")      
+
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  @@unique([phone])  
+}
+
+model Role{
+  @@map("roles")
+  id                   String            @id @default(uuid())
+  title                String            @unique
+  description          String?
+
+  //relations
+  employees            Employee[]
+
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+}
+
+model Department {
+  @@map("departments")
+  id                   String            @id @default(uuid())
+  name                 String            @unique
+  budget               Float
+  managerId            String?  
+
+  //relations
+  employees            Employee[]        @relation("departmentEmployees")
+  manager              Employee?         @relation("DepartmentManagers", fields: [managerId], references: [id], onDelete: SetNull)
+
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+}
