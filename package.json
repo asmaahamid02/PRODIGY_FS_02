@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "main": "dist/src/index.js",
+  "author": "Asmaa Hamid",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
