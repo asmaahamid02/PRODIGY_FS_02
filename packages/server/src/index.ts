@@ -2,15 +2,27 @@ import express, { Response } from 'express'
 import dotenv from 'dotenv'
 import redisClient from './utils/connectRedis'
 import { PrismaClient } from '@prisma/client'
-import http from 'http'
 import helmet from 'helmet'
 import cors from 'cors'
+import rootRoutes from './routes'
+import { errorHandler } from './middlewares/errors.middleware'
+import cookieParser from 'cookie-parser'
+import { $Enums } from '@prisma/client'
 
 dotenv.config()
 
-const prisma = new PrismaClient()
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: {
+      id: string
+      email: string
+      role: $Enums.RoleEnum
+    }
+  }
+}
+
+export const prisma = new PrismaClient({ log: ['query'] })
 const app = express()
-const server = http.createServer(app)
 
 async function bootstrap() {
   app.use(helmet())
@@ -21,6 +33,11 @@ async function bootstrap() {
     })
   )
   app.use(express.json())
+  app.use(cookieParser())
+
+  app.get('/', (_, res) => {
+    res.send('Server is running!')
+  })
 
   app.get('/api/redis-health-checker', async (_, res: Response) => {
     const message = await redisClient.get('try')
@@ -30,9 +47,18 @@ async function bootstrap() {
     })
   })
 
+  //routes
+  app.use('/api', rootRoutes)
+
+  //error handler
+  app.use(errorHandler)
+
   const port = process.env.PORT || 8000
-  server.listen(port, () => {
-    console.log(`Server running on port ${port}`)
+  app.listen(port, () => {
+    const message = `Server running on ${process.env.APP_URL}${
+      process.env.NODE_ENV === 'development' ? `:${port}` : ''
+    }`
+    console.log(message)
   })
 }
 
