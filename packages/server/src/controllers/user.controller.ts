@@ -13,7 +13,7 @@ export const createAdmin = async (
   try {
     const { firstName, lastName, email, password }: IAdminRequest = req.body
 
-    const existedUser = await prisma.user.findFirst({
+    const existedUser = await prisma.user.findUnique({
       where: { email },
     })
 
@@ -27,9 +27,13 @@ export const createAdmin = async (
         lastName,
         email,
         password: hashSync(password, 10),
+        role: 'admin',
       },
       select: {
         password: false,
+        email: true,
+        firstName: true,
+        lastName: true,
       },
     })
 
@@ -51,7 +55,13 @@ export const user = async (req: Request, res: Response, next: NextFunction) => {
 
     const user = await prisma.user.findUnique({
       where: { id },
-      select: { id: true, firstName: true, lastName: true, role: true },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        email: true,
+      },
     })
 
     if (!user) {

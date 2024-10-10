@@ -21,9 +21,3 @@ export const loginValidationSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email(),
   password: Yup.string().required('Password is required'),
 })
-
-export const getValidationErrors = (error: Yup.ValidationError) =>
-  error.inner.map((e) => ({
-    message: e.message,
-    field: e.path,
-  }))

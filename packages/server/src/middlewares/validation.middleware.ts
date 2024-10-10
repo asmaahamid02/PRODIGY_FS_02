@@ -1,4 +1,4 @@
-import { getValidationErrors } from '@staffsphere/shared/src/validations/auth.validations'
+import { getValidationErrors } from '@staffsphere/shared/src/validations'
 import { NextFunction, Request, Response } from 'express'
 import { AnySchema, ValidationError as yupValidationError } from 'yup'
 import ValidationError from '../errors/validationError'
