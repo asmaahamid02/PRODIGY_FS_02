@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client'
+
 export interface IAdminRequest {
   firstName: string
   lastName: string
@@ -18,6 +20,19 @@ export interface IRoleRequest {
 
 export interface IDepartmentRequest {
   name: string
-  budget: number
+  budget: Prisma.Decimal
   managerId?: string
+}
+
+export interface IEmployeeRequest {
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  hireDate: Date
+  jobTitle: string
+  salary: Prisma.Decimal
+  roleId: string
+  managerId?: string
+  departmentId?: string
 }
