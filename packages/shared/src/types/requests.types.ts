@@ -15,3 +15,9 @@ export interface IRoleRequest {
   title: string
   description?: string
 }
+
+export interface IDepartmentRequest {
+  name: string
+  budget: number
+  managerId?: string
+}
