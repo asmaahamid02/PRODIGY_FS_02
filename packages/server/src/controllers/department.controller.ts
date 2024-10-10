@@ -70,6 +70,12 @@ export const updateDepartment = async (
     const { id } = req.params
     const { name, budget, managerId }: IDepartmentRequest = req.body
 
+    if (!name && !budget && !managerId) {
+      throw new BadRequestError({
+        errors: [{ message: 'At least one field is required' }],
+      })
+    }
+
     const existedDepartment = await prisma.department.findUnique({
       where: { id },
     })
@@ -78,45 +84,50 @@ export const updateDepartment = async (
       throw new NotFoundError({ errors: [{ message: 'Department not found' }] })
     }
 
-    //detect data changes
-    if (
-      name === existedDepartment.name &&
-      budget === existedDepartment.budget &&
-      (managerId === existedDepartment.managerId ||
-        (!managerId && !existedDepartment.managerId))
-    ) {
-      res.status(200).json({
-        message: 'No changes detected',
-        data: { department: existedDepartment },
+    const dataToUpdate: { name?: string; budget?: number; managerId?: string } =
+      {}
+
+    if (name && name !== existedDepartment.name) {
+      //check if the new name already exists
+      const existedDepartmentName = await prisma.department.findFirst({
+        where: { name: { equals: name, mode: 'insensitive' } },
       })
 
-      return
+      if (existedDepartmentName && existedDepartmentName.id !== id) {
+        throw new BadRequestError({
+          errors: [{ message: 'Department already exists' }],
+        })
+      }
+
+      dataToUpdate.name = name
     }
 
-    //check if the new name already exists
-    const existedDepartmentName = await prisma.department.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
-    })
-
-    if (existedDepartmentName && existedDepartmentName.id !== id) {
-      throw new BadRequestError({
-        errors: [{ message: 'Department already exists' }],
-      })
+    if (budget && budget !== existedDepartment.budget) {
+      dataToUpdate.budget = budget
     }
 
-    if (managerId) {
+    if (managerId && managerId !== existedDepartment.managerId) {
       const manager = await prisma.user.findUnique({ where: { id: managerId } })
       if (!manager) {
         throw new NotFoundError({ errors: [{ message: 'Manager not found' }] })
       }
+
+      dataToUpdate.managerId = managerId
+    }
+
+    //detect data changes
+    if (Object.keys(dataToUpdate).length === 0) {
+      res.status(200).json({
+        message: 'No changes detected',
+        data: { department: existedDepartment },
+      })
+      return
     }
 
     const updatedDepartment = await prisma.department.update({
       where: { id },
       data: {
-        name,
-        budget,
-        managerId,
+        ...dataToUpdate,
       },
     })
 
