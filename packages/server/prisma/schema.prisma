@@ -44,9 +44,9 @@ model Employee {
   @@map("employees")
   id                   String            @id @default(uuid())
   phone                String?
-  hireDate             DateTime
+  hireDate             DateTime          @db.Date 
   jobTitle             String
-  salary               Float   
+  salary               Decimal           @db.Decimal(10, 2)
   managerId            String?           @unique
   roleId               String
   departmentId         String?
@@ -82,7 +82,7 @@ model Department {
   @@map("departments")
   id                   String            @id @default(uuid())
   name                 String            @unique
-  budget               Float
+  budget               Decimal           @db.Decimal(10, 2) 
   managerId            String?  
 
   //relations
