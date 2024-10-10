@@ -12,9 +12,25 @@ export const getEmployees = async (
   try {
     const employees = await prisma.employee.findMany({
       include: {
-        user: true,
-        department: true,
-        role: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        role: {
+          select: {
+            title: true,
+          },
+        },
       },
       orderBy: [
         {
@@ -80,9 +96,25 @@ export const createEmployee = async (
         phone,
       },
       include: {
-        user: true,
-        department: true,
-        role: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        role: {
+          select: {
+            title: true,
+          },
+        },
       },
     })
 
@@ -161,9 +193,25 @@ export const updateEmployee = async (
         departmentId: departmentId || null,
       },
       include: {
-        user: true,
-        department: true,
-        role: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        department: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        role: {
+          select: {
+            title: true,
+          },
+        },
       },
     })
 

@@ -16,14 +16,43 @@ export const getDepartments = async (
       include: {
         employees: {
           include: {
-            user: true,
-            manager: true,
-            _count: true,
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            manager: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                  },
+                },
+              },
+            },
           },
         },
         manager: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            employees: true,
           },
         },
       },
@@ -65,6 +94,21 @@ export const createDepartment = async (
         budget,
         managerId,
       },
+      include: {
+        manager: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
+        employees: true,
+      },
     })
 
     res.status(201).json({
@@ -105,6 +149,49 @@ export const updateDepartment = async (
         name,
         budget,
         managerId,
+      },
+      include: {
+        manager: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
+        employees: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            manager: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            employees: true,
+          },
+        },
       },
     })
 
