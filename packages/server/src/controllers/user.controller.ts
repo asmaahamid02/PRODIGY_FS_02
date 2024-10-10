@@ -13,8 +13,8 @@ export const createAdmin = async (
   try {
     const { firstName, lastName, email, password }: IAdminRequest = req.body
 
-    const existedUser = await prisma.user.findUnique({
-      where: { email },
+    const existedUser = await prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } },
     })
 
     if (existedUser) {

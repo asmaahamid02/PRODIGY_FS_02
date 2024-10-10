@@ -1,7 +1,4 @@
-import {
-  departmentUpdateValidationSchema,
-  departmentValidationSchema,
-} from '@staffsphere/shared/src/validations/department.validations'
+import { departmentValidationSchema } from '@staffsphere/shared/src/validations/department.validations'
 import { Router } from 'express'
 import { authMiddleware } from '../middlewares/auth.middleware'
 import { isAdmin } from '../middlewares/isAdmin.middleware'
@@ -23,13 +20,7 @@ router.post(
   validateRequest(departmentValidationSchema),
   createDepartment
 )
-router.put(
-  '/:id',
-  authMiddleware,
-  isAdmin,
-  validateRequest(departmentUpdateValidationSchema),
-  updateDepartment
-)
+router.put('/:id', authMiddleware, isAdmin, updateDepartment)
 router.delete('/:id', authMiddleware, isAdmin, deleteDepartment)
 
 export default router

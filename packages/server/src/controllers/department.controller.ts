@@ -10,8 +10,23 @@ export const getDepartments = async (
   next: NextFunction
 ) => {
   try {
+    //get departments with employees, manager and employees count
     const departments = await prisma.department.findMany({
       orderBy: { name: 'asc' },
+      include: {
+        employees: {
+          include: {
+            user: true,
+            manager: true,
+            _count: true,
+          },
+        },
+        manager: {
+          include: {
+            user: true,
+          },
+        },
+      },
     })
 
     res.status(200).json({ data: { departments } })
@@ -84,50 +99,12 @@ export const updateDepartment = async (
       throw new NotFoundError({ errors: [{ message: 'Department not found' }] })
     }
 
-    const dataToUpdate: { name?: string; budget?: number; managerId?: string } =
-      {}
-
-    if (name && name !== existedDepartment.name) {
-      //check if the new name already exists
-      const existedDepartmentName = await prisma.department.findFirst({
-        where: { name: { equals: name, mode: 'insensitive' } },
-      })
-
-      if (existedDepartmentName && existedDepartmentName.id !== id) {
-        throw new BadRequestError({
-          errors: [{ message: 'Department already exists' }],
-        })
-      }
-
-      dataToUpdate.name = name
-    }
-
-    if (budget && budget !== existedDepartment.budget) {
-      dataToUpdate.budget = budget
-    }
-
-    if (managerId && managerId !== existedDepartment.managerId) {
-      const manager = await prisma.user.findUnique({ where: { id: managerId } })
-      if (!manager) {
-        throw new NotFoundError({ errors: [{ message: 'Manager not found' }] })
-      }
-
-      dataToUpdate.managerId = managerId
-    }
-
-    //detect data changes
-    if (Object.keys(dataToUpdate).length === 0) {
-      res.status(200).json({
-        message: 'No changes detected',
-        data: { department: existedDepartment },
-      })
-      return
-    }
-
     const updatedDepartment = await prisma.department.update({
       where: { id },
       data: {
-        ...dataToUpdate,
+        name,
+        budget,
+        managerId,
       },
     })
 

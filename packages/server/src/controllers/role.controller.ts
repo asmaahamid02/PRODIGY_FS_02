@@ -53,20 +53,6 @@ export const updateRole = async (
       })
     }
 
-    //detect data changes
-    if (
-      title === existedRole.title &&
-      (description === existedRole.description ||
-        (!description && !existedRole.description))
-    ) {
-      res.status(200).json({
-        message: 'No changes detected',
-        data: { role: existedRole },
-      })
-
-      return
-    }
-
     //check if the new title already exists
     const existedTitle = await prisma.role.findFirst({
       where: { title: { equals: title, mode: 'insensitive' }, NOT: { id } },

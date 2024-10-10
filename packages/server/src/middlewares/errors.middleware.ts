@@ -28,7 +28,7 @@ export const errorHandler = (
     return
   }
 
-  console.error(JSON.stringify(err, null, 2))
+  console.error(err)
   res.status(500).json({
     errors: [{ message: 'Internal Server Error, something went wrong!' }],
   })

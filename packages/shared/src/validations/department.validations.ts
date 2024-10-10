@@ -5,9 +5,3 @@ export const departmentValidationSchema = yup.object().shape({
   budget: yup.number().required(),
   managerId: yup.string().optional(),
 })
-
-export const departmentUpdateValidationSchema = yup.object().shape({
-  name: yup.string().optional(),
-  budget: yup.number().optional(),
-  managerId: yup.string().optional(),
-})

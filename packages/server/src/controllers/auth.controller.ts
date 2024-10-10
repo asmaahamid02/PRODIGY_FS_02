@@ -15,7 +15,7 @@ export const login = async (
     const { email, password }: ILoginRequest = req.body
 
     const user = await prisma.user.findFirst({
-      where: { email },
+      where: { email: { equals: email, mode: 'insensitive' } },
     })
 
     if (!user) {

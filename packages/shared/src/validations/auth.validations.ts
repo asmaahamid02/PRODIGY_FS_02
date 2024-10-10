@@ -1,8 +1,8 @@
 import * as Yup from 'yup'
 
 export const adminValidationSchema = Yup.object().shape({
-  firstName: Yup.string().required('First name is required'),
-  lastName: Yup.string().required('Last name is required'),
+  firstName: Yup.string().required('First name is required').min(3),
+  lastName: Yup.string().required('Last name is required').min(3),
   email: Yup.string().required('Email is required').email(),
   password: Yup.string()
     .required('Password is required')
