@@ -13,7 +13,6 @@
 - Node.js
 - Express.js
 - PostgreSQL
-- Console.Table
 - React.js
 - Chakra UI
 - React Table
