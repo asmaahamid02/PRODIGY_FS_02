@@ -3,15 +3,11 @@ export enum RoleEnum {
   admin,
 }
 
-export interface IBasicUser {
+export interface IUser {
   id: string
-  email: string
-  role: RoleEnum
-}
-
-export interface IUser extends IBasicUser {
   firstName: string
   lastName: string
+  email: string
+  role: RoleEnum
   createdAt: Date
-  updatedAt: Date
 }

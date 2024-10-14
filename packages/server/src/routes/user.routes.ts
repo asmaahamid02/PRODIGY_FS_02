@@ -7,6 +7,6 @@ import { authMiddleware } from '../middlewares/auth.middleware'
 const router = Router()
 
 router.post('/admin', validateRequest(adminValidationSchema), createAdmin)
-router.get('/user', authMiddleware, user)
+router.get('/', authMiddleware, user)
 
 export default router

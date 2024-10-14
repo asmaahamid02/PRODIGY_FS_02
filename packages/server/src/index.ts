@@ -21,7 +21,7 @@ declare module 'express-serve-static-core' {
   }
 }
 
-export const prisma = new PrismaClient({ log: ['query'] })
+export const prisma = new PrismaClient(/*{ log: ['query'] }*/)
 const app = express()
 
 async function bootstrap() {

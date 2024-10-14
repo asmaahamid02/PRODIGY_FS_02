@@ -7,5 +7,5 @@ import { authMiddleware } from '../middlewares/auth.middleware'
 const router = Router()
 
 router.post('/login', validateRequest(loginValidationSchema), login)
-router.get('/logout', authMiddleware, logout)
+router.post('/logout', authMiddleware, logout)
 export default router
