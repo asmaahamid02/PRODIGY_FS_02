@@ -2,23 +2,22 @@ import { IconButton, useDisclosure } from '@chakra-ui/react'
 import { FC } from 'react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import AlertConfirmation from '../../../components/AlertConfirmation'
-import { QueryClient } from '@tanstack/react-query'
 import { deleteRole } from '../services'
 import { QUERY_KEYS } from '../../../utils/constants.utils'
 import useGlobalMutation from '../../../hooks/useGlobalMutation'
-
-const queryClient = new QueryClient()
+import useValidateQuery from '../../../hooks/useValidateQuery'
 
 type TProps = {
   roleId: string
 }
 const DeleteRole: FC<TProps> = ({ roleId }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { validateQuery } = useValidateQuery()
 
   const { mutate, isPending } = useGlobalMutation({
     mutationFn: deleteRole,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ROLES] })
+      validateQuery([QUERY_KEYS.ROLES])
     },
   })
 

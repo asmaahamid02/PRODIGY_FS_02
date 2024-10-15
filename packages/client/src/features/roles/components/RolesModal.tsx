@@ -12,20 +12,22 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  useToast,
 } from '@chakra-ui/react'
 import { IRoleRequest } from '@staffsphere/shared/src/types/requests.types'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { roleValidationSchema } from '@staffsphere/shared/src/validations/role.validations'
 import { FC } from 'react'
-import { QueryClient } from '@tanstack/react-query'
-import { addRole } from '../services'
+import { addRole, updateRole } from '../services'
 import { QUERY_KEYS } from '../../../utils/constants.utils'
 import useGlobalMutation from '../../../hooks/useGlobalMutation'
+import { IRole } from '@staffsphere/shared/src/types/role.types'
+import useValidateQuery from '../../../hooks/useValidateQuery'
 
-const queryClient = new QueryClient()
 type TProps = {
   isOpen: boolean
   onClose: () => void
+  role?: IRole
 }
 
 const initialValues: IRoleRequest = {
@@ -33,16 +35,23 @@ const initialValues: IRoleRequest = {
   description: '',
 }
 
-const RolesModal: FC<TProps> = ({ isOpen, onClose }) => {
-  const { mutate, isPending } = useGlobalMutation({
-    mutationFn: addRole,
-    onSuccess: async () => {
-      console.log('Role created')
+const RolesModal: FC<TProps> = ({ isOpen, onClose, role }) => {
+  const toast = useToast()
+  const { validateQuery } = useValidateQuery()
 
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ROLES] })
+  const { mutate, isPending } = useGlobalMutation({
+    mutationFn: (data: IRoleRequest) =>
+      role ? updateRole(data, role.id) : addRole(data),
+    onSuccess: async () => {
+      validateQuery([QUERY_KEYS.ROLES])
       setTimeout(() => {
         onClose()
       }, 500)
+
+      toast({
+        title: role ? 'Role updated' : 'Role created',
+        status: 'success',
+      })
     },
   })
 
@@ -60,13 +69,21 @@ const RolesModal: FC<TProps> = ({ isOpen, onClose }) => {
       <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create new role</ModalHeader>
+          <ModalHeader> {role ? 'Update' : 'Create new'} role</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Formik
-              initialValues={initialValues}
+              initialValues={
+                role
+                  ? {
+                      title: role.title,
+                      description: role.description ?? '',
+                    }
+                  : initialValues
+              }
               validationSchema={roleValidationSchema}
               onSubmit={handleSubmit}
+              enableReinitialize
             >
               {({ isSubmitting }) => (
                 <Form>
@@ -114,7 +131,7 @@ const RolesModal: FC<TProps> = ({ isOpen, onClose }) => {
                       type='submit'
                       isLoading={isSubmitting || isPending}
                     >
-                      Submit
+                      {role ? 'Update' : 'Add'}
                     </Button>
                     <Button onClick={onClose}>Cancel</Button>
                   </ModalFooter>

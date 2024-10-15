@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   HStack,
-  IconButton,
   Table,
   TableContainer,
   Tbody,
@@ -19,8 +18,8 @@ import { errorMessage } from '../../../utils/error.utils'
 import LoadingSkeleton from '../../../components/LoadingSkeleton'
 import EmptyDataFeedback from '../../../components/EmptyDataFeedback'
 import { QUERY_KEYS } from '../../../utils/constants.utils'
-import { FiEdit3 } from 'react-icons/fi'
 import DeleteRole from './DeleteRole'
+import EditRole from './EditRole'
 
 const RolesList = () => {
   const toast = useToast()
@@ -34,7 +33,7 @@ const RolesList = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: [QUERY_KEYS.ROLES, 'infinite'],
+    queryKey: [QUERY_KEYS.ROLES],
     getNextPageParam: (prevData: IGetRolesResponse) => prevData.meta?.nextPage,
     queryFn: ({ pageParam }) => getRoles(pageParam, 5),
     initialPageParam: 1,
@@ -87,12 +86,7 @@ const RolesList = () => {
                     <Td>
                       <HStack>
                         <DeleteRole roleId={role.id} />
-                        <IconButton
-                          size='sm'
-                          aria-label='Edit role'
-                          colorScheme='green'
-                          icon={<FiEdit3 />}
-                        />
+                        <EditRole role={role} />
                       </HStack>
                     </Td>
                   </Tr>

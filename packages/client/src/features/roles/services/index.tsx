@@ -33,6 +33,16 @@ export const addRole = async (
   return response.data
 }
 
+export const updateRole = async (
+  data: IRoleRequest,
+  id: string
+): Promise<{ data: { role: IRole } }> => {
+  const response = await axiosInstance.put(`/roles/${id}`, data, {
+    withCredentials: true,
+  })
+  return response.data
+}
+
 export const deleteRole = async (id: string): Promise<{ message: string }> => {
   const response = await axiosInstance.delete(`/roles/${id}`, {
     withCredentials: true,

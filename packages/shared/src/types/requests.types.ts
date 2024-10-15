@@ -15,7 +15,7 @@ export interface ILoginRequest {
 
 export interface IRoleRequest {
   title: string
-  description?: string
+  description?: string | null
 }
 
 export interface IDepartmentRequest {

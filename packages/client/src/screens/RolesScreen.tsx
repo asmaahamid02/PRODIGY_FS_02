@@ -1,4 +1,4 @@
-import { Button, IconButton, useDisclosure } from '@chakra-ui/react'
+import { IconButton, useDisclosure } from '@chakra-ui/react'
 import RolesModal from '../features/roles/components/RolesModal'
 import RolesList from '../features/roles/components/RolesList'
 import MainScreenLayout from '../layouts/MainScreenLayout'
