@@ -3,6 +3,7 @@ import {
   Drawer,
   DrawerContent,
   Flex,
+  HStack,
   IconButton,
   Text,
   useColorModeValue,
@@ -16,10 +17,12 @@ const AdminLayout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <Box
-      minH='100vh'
-      width={'100%'}
+    <HStack
+      spacing={0}
       bg={useColorModeValue('gray.100', 'gray.900')}
+      overflow={'hidden'}
+      height='100vh'
+      width={'full'}
     >
       <SidebarContent
         onClose={onClose}
@@ -39,34 +42,57 @@ const AdminLayout = () => {
         </DrawerContent>
       </Drawer>
 
-      {/* Mobile Hamburger Icon */}
       <Flex
+        flexDirection={'column'}
+        className='v-stack'
+        width={'full'}
         ml={{ base: 0, md: 60 }}
-        px={4}
-        height='20'
-        alignItems='center'
-        bg={useColorModeValue('white', 'gray.900')}
-        borderBottomWidth='1px'
-        borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-        justifyContent={{ base: 'space-between', md: 'flex-end' }}
+        overflow={'hidden'}
+        height='100vh'
       >
-        <IconButton
-          display={{ base: 'flex', md: 'none' }}
-          onClick={onOpen}
-          variant='outline'
-          aria-label='open menu'
-          icon={<FiMenu />}
-        />
-        <Text fontSize='2xl' fontFamily='monospace' fontWeight='bold'>
-          Dashboard
-        </Text>
-      </Flex>
+        {/* Mobile Hamburger Icon */}
+        <Flex
+          as={'header'}
+          px={4}
+          alignItems='center'
+          bg={useColorModeValue('white', 'gray.900')}
+          borderBottomWidth='1px'
+          borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+          justifyContent={{ base: 'space-between', md: 'flex-end' }}
+          position={'sticky'}
+          top={0}
+          zIndex={1}
+          height={'60px'}
+        >
+          <IconButton
+            display={{ base: 'flex', md: 'none' }}
+            onClick={onOpen}
+            variant='outline'
+            aria-label='open menu'
+            icon={<FiMenu />}
+          />
+          <Text fontSize='2xl' fontFamily='monospace' fontWeight='bold'>
+            Dashboard
+          </Text>
+        </Flex>
 
-      {/* Main Content Area */}
-      <Box ml={{ base: 0, md: 60 }} p='4'>
-        <Outlet />
-      </Box>
-    </Box>
+        {/* Main Content Area */}
+        <Box as='main' p='4' overflowY={'hidden'} h='full' flex={1}>
+          <Box
+            px={6}
+            pb={6}
+            bg='white'
+            borderRadius='md'
+            boxShadow='md'
+            width={'full'}
+            h='full'
+            overflowY={'auto'}
+          >
+            <Outlet />
+          </Box>
+        </Box>
+      </Flex>
+    </HStack>
   )
 }
 

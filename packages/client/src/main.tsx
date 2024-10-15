@@ -6,6 +6,9 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+export const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,7 +24,9 @@ createRoot(document.getElementById('root')!).render(
     >
       <Provider store={store}>
         <BrowserRouter>
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
         </BrowserRouter>
       </Provider>
     </ChakraProvider>

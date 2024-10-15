@@ -1,5 +1,4 @@
 import {
-  Box,
   CloseButton,
   Flex,
   Text,
@@ -20,16 +19,25 @@ type TProps = {
 
 const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
   return (
-    <Box
+    <VStack
       bg={useColorModeValue('white', 'gray.900')}
       borderRight='1px'
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
       w={{ base: 'full', md: 60 }}
-      pos='fixed'
-      h='full'
+      position='fixed'
+      height='100vh'
+      zIndex={1}
+      overflow={'hidden'}
       {...rest}
     >
-      <Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
+      <Flex
+        px={4}
+        alignItems='center'
+        justifyContent='space-between'
+        position={'fixed'}
+        width={'100%'}
+        h={20}
+      >
         <Text
           fontSize='2xl'
           fontWeight='bold'
@@ -43,7 +51,15 @@ const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      <VStack align='start' spacing={2} p={4}>
+      <VStack
+        align='start'
+        spacing={2}
+        p={4}
+        mt={20}
+        overflowY={'auto'}
+        width={'100%'}
+        height={'100%'}
+      >
         <NavItem to={'/'} icon={FiHome}>
           Home
         </NavItem>
@@ -57,7 +73,7 @@ const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
           Departments
         </NavItem>
       </VStack>
-    </Box>
+    </VStack>
   )
 }
 
