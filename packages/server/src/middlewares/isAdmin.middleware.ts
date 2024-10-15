@@ -14,7 +14,6 @@ export const isAdmin = async (
       throw new UnauthenticatedError()
     }
 
-    console.log(role)
     if (role !== 'admin') {
       throw new UnauthorizedError()
     }
