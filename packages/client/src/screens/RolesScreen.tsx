@@ -1,7 +1,8 @@
-import { Button, useDisclosure } from '@chakra-ui/react'
+import { Button, IconButton, useDisclosure } from '@chakra-ui/react'
 import RolesModal from '../features/roles/components/RolesModal'
 import RolesList from '../features/roles/components/RolesList'
 import MainScreenLayout from '../layouts/MainScreenLayout'
+import { FiPlus } from 'react-icons/fi'
 
 const RolesScreen = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -9,9 +10,14 @@ const RolesScreen = () => {
   return (
     <MainScreenLayout
       headerChildren={
-        <Button colorScheme='purple' size='lg' onClick={onOpen}>
-          Add Role
-        </Button>
+        <IconButton
+          colorScheme='purple'
+          size='lg'
+          onClick={onOpen}
+          aria-label='Add role'
+          rounded={'full'}
+          icon={<FiPlus />}
+        />
       }
     >
       <RolesList />

@@ -5,7 +5,6 @@ import {
   Flex,
   HStack,
   IconButton,
-  Text,
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -63,17 +62,14 @@ const AdminLayout = () => {
           top={0}
           zIndex={1}
           height={'60px'}
+          display={{ base: 'flex', md: 'none' }}
         >
           <IconButton
-            display={{ base: 'flex', md: 'none' }}
             onClick={onOpen}
             variant='outline'
             aria-label='open menu'
             icon={<FiMenu />}
           />
-          <Text fontSize='2xl' fontFamily='monospace' fontWeight='bold'>
-            Dashboard
-          </Text>
         </Flex>
 
         {/* Main Content Area */}
