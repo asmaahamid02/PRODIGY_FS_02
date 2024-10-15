@@ -87,9 +87,27 @@ export const getRoles = async (
   next: NextFunction
 ) => {
   try {
-    const roles = await prisma.role.findMany({ orderBy: { title: 'asc' } })
+    const { page = 1, per_page = 10 } = req.query
 
-    res.status(200).json({ data: { roles } })
+    const roles = await prisma.role.findMany({
+      skip: (Number(page) - 1) * Number(per_page),
+      take: Number(per_page),
+      orderBy: { title: 'asc' },
+    })
+
+    const totalRoles = await prisma.role.count()
+    const totalPages = Math.ceil(totalRoles / Number(per_page))
+
+    res.status(200).json({
+      data: { roles },
+      meta: {
+        totalRoles,
+        totalPages,
+        currentPage: Number(page),
+        perPage: Number(per_page),
+        nextPage: totalPages > Number(page) ? Number(page) + 1 : null,
+      },
+    })
   } catch (error) {
     next(error)
   }
