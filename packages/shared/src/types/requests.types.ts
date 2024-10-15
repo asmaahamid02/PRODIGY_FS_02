@@ -20,8 +20,8 @@ export interface IRoleRequest {
 
 export interface IDepartmentRequest {
   name: string
-  budget: Prisma.Decimal
-  managerId?: string
+  budget: number
+  managerId?: string | null
 }
 
 export interface IEmployeeRequest {

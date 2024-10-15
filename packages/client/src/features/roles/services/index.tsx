@@ -1,18 +1,11 @@
 import { IRole } from '@staffsphere/shared/src/types/role.types'
 import { axiosInstance } from '../../../config/axios.config'
 import { IRoleRequest } from '@staffsphere/shared/src/types/requests.types'
+import { IMeta } from '@staffsphere/shared/src/types/general.type'
 
 export interface IGetRolesResponse {
   data: { roles: IRole[] }
-  meta: IRolesMeta
-}
-
-export interface IRolesMeta {
-  totalRoles: number
-  totalPages: number
-  currentPage: number
-  perPage: number
-  nextPage: number | null
+  meta: IMeta
 }
 
 export const getRoles = async (
