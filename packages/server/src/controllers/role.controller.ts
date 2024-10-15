@@ -101,10 +101,8 @@ export const getRoles = async (
     res.status(200).json({
       data: { roles },
       meta: {
-        totalRoles,
+        total: totalRoles,
         totalPages,
-        currentPage: Number(page),
-        perPage: Number(per_page),
         nextPage: totalPages > Number(page) ? Number(page) + 1 : null,
       },
     })

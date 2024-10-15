@@ -10,6 +10,7 @@ export const getDepartments = async (
   next: NextFunction
 ) => {
   try {
+    const { page = 1, per_page = 10 } = req.query
     //get departments with employees, manager and employees count
     const departments = await prisma.department.findMany({
       orderBy: { name: 'asc' },
@@ -56,9 +57,21 @@ export const getDepartments = async (
           },
         },
       },
+      skip: (Number(page) - 1) * Number(per_page),
+      take: Number(per_page),
     })
 
-    res.status(200).json({ data: { departments } })
+    const totalDepartments = await prisma.department.count()
+    const totalPages = Math.ceil(totalDepartments / Number(per_page))
+
+    res.status(200).json({
+      data: { departments },
+      meta: {
+        total: totalDepartments,
+        totalPages,
+        nextPage: Number(page) < totalPages ? Number(page) + 1 : null,
+      },
+    })
   } catch (error) {
     next(error)
   }
@@ -92,7 +105,7 @@ export const createDepartment = async (
       data: {
         name,
         budget,
-        managerId,
+        managerId: managerId || null,
       },
       include: {
         manager: {
@@ -143,12 +156,14 @@ export const updateDepartment = async (
       throw new NotFoundError({ errors: [{ message: 'Department not found' }] })
     }
 
+    console.log('managerId: ', managerId)
+
     const updatedDepartment = await prisma.department.update({
       where: { id },
       data: {
         name,
         budget,
-        managerId,
+        managerId: managerId || null,
       },
       include: {
         manager: {

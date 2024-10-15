@@ -10,6 +10,8 @@ export const getEmployees = async (
   next: NextFunction
 ) => {
   try {
+    const { page = 1, per_page = 10, paginated = false } = req.query
+
     const employees = await prisma.employee.findMany({
       include: {
         user: {
@@ -39,9 +41,27 @@ export const getEmployees = async (
         { user: { firstName: 'asc' } },
         { user: { lastName: 'asc' } },
       ],
+      skip: paginated ? (Number(page) - 1) * Number(per_page) : 0,
+      take: paginated ? Number(per_page) : undefined,
     })
 
-    res.status(200).json({ data: { employees } })
+    let total = 0,
+      totalPages = 0
+    if (paginated) {
+      total = await prisma.employee.count()
+      totalPages = Math.ceil(total / Number(per_page))
+    }
+
+    res
+      .status(200)
+      .json({
+        data: { employees },
+        meta: {
+          total,
+          totalPages,
+          nextPage: totalPages > Number(page) ? Number(page) + 1 : null,
+        },
+      })
   } catch (error) {
     next(error)
   }
