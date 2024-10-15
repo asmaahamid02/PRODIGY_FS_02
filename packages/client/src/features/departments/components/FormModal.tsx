@@ -143,9 +143,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                         <Input {...field} id='managerId' as={Select}>
                           {data && data.data.employees.length > 0 ? (
                             <>
-                              <option value={''} selected>
-                                Select manager
-                              </option>
+                              <option value={''}>Select manager</option>
                               {data.data.employees.map((employee) => (
                                 <option
                                   key={employee.id}
@@ -154,9 +152,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                               ))}
                             </>
                           ) : (
-                            <option value='' selected>
-                              No managers
-                            </option>
+                            <option value=''>No managers</option>
                           )}
                         </Input>
                         <FormErrorMessage>

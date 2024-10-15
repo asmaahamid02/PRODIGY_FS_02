@@ -6,13 +6,14 @@ export interface IEmployee {
   phone: string | null
   hireDate: string
   jobTitle: string
-  salary: string
+  salary: number
   managerId: string | null
   roleId: string
   departmentId: string | null
   createdAt: string
   updatedAt: string
   user: IBasicUser
-  manager: IUser | null
+  manager: IEmployee | null
   department?: IBasicDepartment | null
+  role?: { title: string } | null
 }

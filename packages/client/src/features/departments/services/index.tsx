@@ -9,13 +9,17 @@ export interface IGetDepartmentsResponse {
 }
 
 export const getAll = async (
-  page: number,
-  per_page: number
+  paginated: boolean = false,
+  page?: number,
+  per_page?: number
 ): Promise<IGetDepartmentsResponse> => {
-  const response = await axiosInstance.get(
-    `/departments?page=${page}&per_page=${per_page}`,
-    { withCredentials: true }
-  )
+  let url = '/departments'
+
+  if (paginated) {
+    url += `?page=${page}&per_page=${per_page}`
+  }
+
+  const response = await axiosInstance.get(url, { withCredentials: true })
   return response.data
 }
 

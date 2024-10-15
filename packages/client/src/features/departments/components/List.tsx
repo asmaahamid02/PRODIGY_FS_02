@@ -38,7 +38,7 @@ const List = () => {
     queryKey: [QUERY_KEYS.DEPARTMENTS],
     getNextPageParam: (prevData: IGetDepartmentsResponse) =>
       prevData.meta?.nextPage,
-    queryFn: ({ pageParam }) => getAll(pageParam, 5),
+    queryFn: ({ pageParam }) => getAll(true, pageParam, 5),
     initialPageParam: 1,
   })
 

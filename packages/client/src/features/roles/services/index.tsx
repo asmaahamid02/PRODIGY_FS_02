@@ -9,13 +9,17 @@ export interface IGetRolesResponse {
 }
 
 export const getAll = async (
-  page: number,
-  per_page: number
+  paginated: boolean = false,
+  page?: number,
+  per_page?: number
 ): Promise<IGetRolesResponse> => {
-  const response = await axiosInstance.get(
-    `/roles?page=${page}&per_page=${per_page}`,
-    { withCredentials: true }
-  )
+  let url = '/roles'
+
+  if (paginated) {
+    url += `?page=${page}&per_page=${per_page}`
+  }
+
+  const response = await axiosInstance.get(url, { withCredentials: true })
   return response.data
 }
 

@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { getAll, IGetRolesResponse } from '../services'
 import {
   Box,
   Button,
@@ -9,15 +8,18 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
   useToast,
+  VStack,
 } from '@chakra-ui/react'
 import { errorMessage } from '../../../utils/error.utils'
 import LoadingSkeleton from '../../../components/LoadingSkeleton'
 import EmptyDataFeedback from '../../../components/EmptyDataFeedback'
 import { QUERY_KEYS } from '../../../utils/constants.utils'
+import { getAll, IGetEmployeesResponse } from '../services'
 import DeleteRecord from './DeleteRecord'
 import EditRecord from './EditRecord'
 
@@ -33,8 +35,9 @@ const List = () => {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: [QUERY_KEYS.ROLES],
-    getNextPageParam: (prevData: IGetRolesResponse) => prevData.meta?.nextPage,
+    queryKey: [QUERY_KEYS.EMPLOYEES],
+    getNextPageParam: (prevData: IGetEmployeesResponse) =>
+      prevData.meta?.nextPage,
     queryFn: ({ pageParam }) => getAll(true, pageParam, 5),
     initialPageParam: 1,
   })
@@ -48,45 +51,61 @@ const List = () => {
     }
   }, [isError, error, toast])
 
-  const roles = useMemo(() => {
+  const rows = useMemo(() => {
     if (
       !data ||
       !data.pages ||
       !data.pages[0] ||
-      data.pages[0].data.roles.length === 0
+      data.pages[0].data.employees.length === 0
     )
       return []
-    return data.pages.flatMap((page: IGetRolesResponse) => page.data.roles)
+    return data.pages.flatMap(
+      (page: IGetEmployeesResponse) => page.data.employees
+    )
   }, [data])
 
   if (isLoading) return <LoadingSkeleton />
 
   return (
     <Box width={'full'} py={4}>
-      {roles.length > 0 ? (
+      {rows.length > 0 ? (
         <>
           <TableContainer>
             <Table variant='simple'>
               <Thead>
                 <Tr>
                   <Th isNumeric>#</Th>
-                  <Th>Title</Th>
-                  <Th>Description</Th>
-                  <Th>Created At</Th>
+                  <Th>Name</Th>
+                  <Th>Email</Th>
+                  <Th>Role</Th>
+                  <Th>Manager</Th>
+                  <Th>Hire date</Th>
                   <Th>Actions</Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {roles.map((role, index) => (
-                  <Tr key={role.id}>
+                {rows.map((row, index) => (
+                  <Tr key={row.id}>
                     <Td isNumeric>{index + 1}</Td>
-                    <Td>{role.title}</Td>
-                    <Td>{role.description}</Td>
-                    <Td>{new Date(role.createdAt).toDateString()}</Td>
+                    <Td>{`${row.user.firstName} ${row.user.lastName}`}</Td>
+                    <Td>{row.user.email}</Td>
+                    <Td>{row.role?.title}</Td>
+                    <Td>
+                      {row.manager ? (
+                        <VStack align={'start'}>
+                          <Text
+                            fontWeight={'bold'}
+                          >{`${row.manager?.user.firstName} ${row.manager?.user.lastName}`}</Text>
+                          <Text>{row.manager?.user.email}</Text>
+                        </VStack>
+                      ) : null}
+                    </Td>
+
+                    <Td>{new Date(row.hireDate).toLocaleDateString()}</Td>
                     <Td>
                       <HStack>
-                        <DeleteRecord id={role.id} />
-                        <EditRecord record={role} />
+                        <DeleteRecord id={row.id} />
+                        <EditRecord record={row} />
                       </HStack>
                     </Td>
                   </Tr>
@@ -108,8 +127,8 @@ const List = () => {
         </>
       ) : (
         <EmptyDataFeedback
-          title='No roles found'
-          description='Create a new role to get started'
+          title='No employees found'
+          description='Create a new employees to get started'
         />
       )}
     </Box>
@@ -117,30 +136,3 @@ const List = () => {
 }
 
 export default List
-
-// const columnHelper = createColumnHelper<IRole>()
-
-// const columns = useMemo(
-//   () => [
-//     columnHelper.accessor('title', {
-//       header: 'Title',
-//       cell: (props) => props.getValue(),
-//     }),
-
-//     columnHelper.accessor('description', {
-//       header: 'Description',
-//       cell: (props) => props.getValue(),
-//     }),
-//     columnHelper.display({
-//       id: 'actions',
-//       cell: (props) => <></>,
-//     }),
-//   ],
-//   [columnHelper]
-// )
-
-// const table = useReactTable<IRole>({
-//   columns,
-//   data: rows,
-//   getCoreRowModel: getCoreRowModel(),
-// })

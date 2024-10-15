@@ -28,11 +28,11 @@ export interface IEmployeeRequest {
   firstName: string
   lastName: string
   email: string
-  phone?: string
-  hireDate: Date
+  phone?: string | null
+  hireDate: string
   jobTitle: string
-  salary: Prisma.Decimal
+  salary: number
   roleId: string
-  managerId?: string
-  departmentId?: string
+  managerId?: string | null
+  departmentId?: string | null
 }
