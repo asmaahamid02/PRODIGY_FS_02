@@ -8,7 +8,7 @@ export interface IGetRolesResponse {
   meta: IMeta
 }
 
-export const getRoles = async (
+export const getAll = async (
   page: number,
   per_page: number
 ): Promise<IGetRolesResponse> => {
@@ -19,14 +19,14 @@ export const getRoles = async (
   return response.data
 }
 
-export const addRole = async (
+export const addRecord = async (
   data: IRoleRequest
 ): Promise<{ data: { role: IRole } }> => {
   const response = await axiosInstance.post('/roles', data)
   return response.data
 }
 
-export const updateRole = async (
+export const updateRecord = async (
   data: IRoleRequest,
   id: string
 ): Promise<{ data: { role: IRole } }> => {
@@ -36,7 +36,9 @@ export const updateRole = async (
   return response.data
 }
 
-export const deleteRole = async (id: string): Promise<{ message: string }> => {
+export const deleteRecord = async (
+  id: string
+): Promise<{ message: string }> => {
   const response = await axiosInstance.delete(`/roles/${id}`, {
     withCredentials: true,
   })

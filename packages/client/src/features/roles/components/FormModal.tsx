@@ -18,7 +18,7 @@ import { IRoleRequest } from '@staffsphere/shared/src/types/requests.types'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
 import { roleValidationSchema } from '@staffsphere/shared/src/validations/role.validations'
 import { FC } from 'react'
-import { addRole, updateRole } from '../services'
+import { addRecord, updateRecord } from '../services'
 import { QUERY_KEYS } from '../../../utils/constants.utils'
 import useGlobalMutation from '../../../hooks/useGlobalMutation'
 import { IRole } from '@staffsphere/shared/src/types/role.types'
@@ -27,7 +27,7 @@ import useValidateQuery from '../../../hooks/useValidateQuery'
 type TProps = {
   isOpen: boolean
   onClose: () => void
-  role?: IRole
+  record?: IRole
 }
 
 const initialValues: IRoleRequest = {
@@ -35,13 +35,14 @@ const initialValues: IRoleRequest = {
   description: '',
 }
 
-const RolesModal: FC<TProps> = ({ isOpen, onClose, role }) => {
+const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
   const toast = useToast()
   const { validateQuery } = useValidateQuery()
 
   const { mutate, isPending } = useGlobalMutation({
     mutationFn: (data: IRoleRequest) =>
-      role ? updateRole(data, role.id) : addRole(data),
+      record ? updateRecord(data, record.id) : addRecord(data),
+
     onSuccess: async () => {
       validateQuery([QUERY_KEYS.ROLES])
       setTimeout(() => {
@@ -49,7 +50,7 @@ const RolesModal: FC<TProps> = ({ isOpen, onClose, role }) => {
       }, 500)
 
       toast({
-        title: role ? 'Role updated' : 'Role created',
+        title: record ? 'Role updated' : 'Role created',
         status: 'success',
       })
     },
@@ -69,15 +70,15 @@ const RolesModal: FC<TProps> = ({ isOpen, onClose, role }) => {
       <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader> {role ? 'Update' : 'Create new'} role</ModalHeader>
+          <ModalHeader> {record ? 'Update' : 'Create new'} role</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Formik
               initialValues={
-                role
+                record
                   ? {
-                      title: role.title,
-                      description: role.description ?? '',
+                      title: record.title,
+                      description: record.description ?? '',
                     }
                   : initialValues
               }
@@ -131,7 +132,7 @@ const RolesModal: FC<TProps> = ({ isOpen, onClose, role }) => {
                       type='submit'
                       isLoading={isSubmitting || isPending}
                     >
-                      {role ? 'Update' : 'Add'}
+                      {record ? 'Update' : 'Add'}
                     </Button>
                     <Button onClick={onClose}>Cancel</Button>
                   </ModalFooter>
@@ -145,4 +146,4 @@ const RolesModal: FC<TProps> = ({ isOpen, onClose, role }) => {
   )
 }
 
-export default RolesModal
+export default FormModal

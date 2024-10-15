@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { getRoles, IGetRolesResponse } from '../services'
+import { getAll, IGetRolesResponse } from '../services'
 import {
   Box,
   Button,
@@ -18,10 +18,10 @@ import { errorMessage } from '../../../utils/error.utils'
 import LoadingSkeleton from '../../../components/LoadingSkeleton'
 import EmptyDataFeedback from '../../../components/EmptyDataFeedback'
 import { QUERY_KEYS } from '../../../utils/constants.utils'
-import DeleteRole from './DeleteRole'
-import EditRole from './EditRole'
+import DeleteRecord from './DeleteRecord'
+import EditRecord from './EditRecord'
 
-const RolesList = () => {
+const List = () => {
   const toast = useToast()
 
   const {
@@ -35,7 +35,7 @@ const RolesList = () => {
   } = useInfiniteQuery({
     queryKey: [QUERY_KEYS.ROLES],
     getNextPageParam: (prevData: IGetRolesResponse) => prevData.meta?.nextPage,
-    queryFn: ({ pageParam }) => getRoles(pageParam, 5),
+    queryFn: ({ pageParam }) => getAll(pageParam, 5),
     initialPageParam: 1,
   })
 
@@ -85,8 +85,8 @@ const RolesList = () => {
                     <Td>{new Date(role.createdAt).toDateString()}</Td>
                     <Td>
                       <HStack>
-                        <DeleteRole roleId={role.id} />
-                        <EditRole role={role} />
+                        <DeleteRecord id={role.id} />
+                        <EditRecord record={role} />
                       </HStack>
                     </Td>
                   </Tr>
@@ -116,7 +116,7 @@ const RolesList = () => {
   )
 }
 
-export default RolesList
+export default List
 
 // const columnHelper = createColumnHelper<IRole>()
 
