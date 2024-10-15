@@ -47,7 +47,7 @@ model Employee {
   hireDate             DateTime          @db.Date 
   jobTitle             String
   salary               Decimal           @db.Decimal(10, 2)
-  managerId            String?           @unique
+  managerId            String?           
   roleId               String
   departmentId         String?
 

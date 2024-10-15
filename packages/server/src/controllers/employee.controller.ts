@@ -33,6 +33,18 @@ export const getEmployees = async (
             title: true,
           },
         },
+        manager: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
       },
       orderBy: [
         {
@@ -52,16 +64,14 @@ export const getEmployees = async (
       totalPages = Math.ceil(total / Number(per_page))
     }
 
-    res
-      .status(200)
-      .json({
-        data: { employees },
-        meta: {
-          total,
-          totalPages,
-          nextPage: totalPages > Number(page) ? Number(page) + 1 : null,
-        },
-      })
+    res.status(200).json({
+      data: { employees },
+      meta: {
+        total,
+        totalPages,
+        nextPage: totalPages > Number(page) ? Number(page) + 1 : null,
+      },
+    })
   } catch (error) {
     next(error)
   }
@@ -87,7 +97,12 @@ export const createEmployee = async (
     }: IEmployeeRequest = req.body
 
     const existedEmployee = await prisma.user.findFirst({
-      where: { email: { equals: email, mode: 'insensitive' } },
+      where: {
+        OR: [
+          { email: { equals: email, mode: 'insensitive' } },
+          // {"employee.phone": { equals: phone, mode: 'insensitive' }},
+        ],
+      },
     })
 
     if (existedEmployee) {
@@ -107,13 +122,13 @@ export const createEmployee = async (
             role: 'user',
           },
         },
-        departmentId,
+        departmentId: departmentId || null,
         roleId,
         jobTitle,
         hireDate: new Date(hireDate),
         salary,
-        managerId,
-        phone,
+        managerId: managerId || null,
+        phone: phone || null,
       },
       include: {
         user: {
