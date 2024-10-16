@@ -10,9 +10,9 @@ export interface IDepartment extends IBasicDepartment {
   managerId: string
   createdAt: string
   updatedAt: string
-  employees: IEmployee[]
+  employees?: IEmployee[] | null
   manager: IEmployee | null
-  _count: {
+  _count?: {
     employees: number
-  }
+  } | null
 }

@@ -1,4 +1,4 @@
-import { IBasicDepartment } from './department.types'
+import { IBasicDepartment, IDepartment } from './department.types'
 import { IBasicUser, IUser } from './user.types'
 
 export interface IEmployee {
@@ -14,6 +14,7 @@ export interface IEmployee {
   updatedAt: string
   user: IBasicUser
   manager: IEmployee | null
-  department?: IBasicDepartment | null
+  department?: IDepartment | null
   role?: { title: string } | null
+  subordinates?: IEmployee[] | null
 }

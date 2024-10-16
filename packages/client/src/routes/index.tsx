@@ -16,11 +16,12 @@ const MainRoutes = () => {
         <Route path={'/login'} element={<LoginScreen />} />
       </Route>
 
-      <Route element={<ProtectedRoute />}></Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path={'/'} index element={<HomeScreen />} />
+      </Route>
 
       <Route element={<ProtectedRoute roles={[ROLE.ADMIN]} />}>
         <Route element={<AdminLayout />}>
-          <Route path={'/'} index element={<HomeScreen />} />
           <Route path={'/employees'} index element={<EmployeesScreen />} />
           <Route path={'/roles'} index element={<RolesScreen />} />
           <Route path={'/departments'} index element={<DepartmentsScreen />} />

@@ -4,7 +4,6 @@ import {
   Flex,
   Text,
   useColorModeValue,
-  useToast,
   VStack,
   type BoxProps,
 } from '@chakra-ui/react'
@@ -15,29 +14,14 @@ import { FaStaylinked } from 'react-icons/fa'
 import { BsBuildingGear } from 'react-icons/bs'
 import { GrUserSettings } from 'react-icons/gr'
 import { RiLogoutCircleLine } from 'react-icons/ri'
-import { useAppDispatch } from '../store/hooks'
-import { logout } from '../features/auth/redux/authActions'
-import { errorMessage } from '../utils/error.utils'
+import useLogout from '../hooks/useLogout'
 
 type TProps = {
   onClose: () => void
 } & BoxProps
 
 const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
-  const dispatch = useAppDispatch()
-  const toast = useToast()
-
-  const logoutUser = async () => {
-    try {
-      await dispatch(logout()).unwrap()
-    } catch (error) {
-      console.log('🚀 ~ Logout ~ error:', error)
-      toast({
-        title: errorMessage(error),
-        status: 'error',
-      })
-    }
-  }
+  const { logoutUser } = useLogout()
 
   return (
     <VStack

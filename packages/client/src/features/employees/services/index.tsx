@@ -25,6 +25,15 @@ export const getAll = async (
   return response.data
 }
 
+export const getOne = async (
+  id: string
+): Promise<{ data: { employee: IEmployee } }> => {
+  const response = await axiosInstance.get(`/employees/show/${id}`, {
+    withCredentials: true,
+  })
+  return response.data
+}
+
 export const addRecord = async (
   data: IEmployeeRequest
 ): Promise<{ data: { department: IEmployee } }> => {

@@ -98,7 +98,7 @@ const List = () => {
                         </VStack>
                       ) : null}
                     </Td>
-                    <Td>{row._count.employees}</Td>
+                    <Td>{row._count?.employees}</Td>
                     <Td>
                       <HStack>
                         <DeleteRecord id={row.id} />

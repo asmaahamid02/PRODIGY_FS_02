@@ -11,8 +11,9 @@ import {
 import SidebarContent from '../components/SidebarContent'
 import { FiMenu } from 'react-icons/fi'
 import { Outlet } from 'react-router-dom'
+import { ReactNode } from 'react'
 
-const AdminLayout = () => {
+const AdminLayout = ({ children }: { children?: ReactNode }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -84,7 +85,7 @@ const AdminLayout = () => {
             h='full'
             overflowY={'auto'}
           >
-            <Outlet />
+            {children ? children : <Outlet />}
           </Box>
         </Box>
       </Flex>
