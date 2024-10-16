@@ -11,6 +11,7 @@ export const getEmployees = async (
 ) => {
   try {
     const { page = 1, per_page = 10, paginated = false } = req.query
+    const isPaginated = Boolean(paginated)
 
     const employees = await prisma.employee.findMany({
       include: {
@@ -53,13 +54,13 @@ export const getEmployees = async (
         { user: { firstName: 'asc' } },
         { user: { lastName: 'asc' } },
       ],
-      skip: paginated ? (Number(page) - 1) * Number(per_page) : 0,
-      take: paginated ? Number(per_page) : undefined,
+      skip: isPaginated ? (Number(page) - 1) * Number(per_page) : 0,
+      take: isPaginated ? Number(per_page) : undefined,
     })
 
     let total = 0,
       totalPages = 0
-    if (paginated) {
+    if (isPaginated) {
       total = await prisma.employee.count()
       totalPages = Math.ceil(total / Number(per_page))
     }
@@ -100,14 +101,18 @@ export const createEmployee = async (
       where: {
         OR: [
           { email: { equals: email, mode: 'insensitive' } },
-          // {"employee.phone": { equals: phone, mode: 'insensitive' }},
+          {
+            employee: {
+              phone,
+            },
+          },
         ],
       },
     })
 
     if (existedEmployee) {
       throw new BadRequestError({
-        errors: [{ message: 'Employee already exists' }],
+        errors: [{ message: 'Email/phone number already exists' }],
       })
     }
 

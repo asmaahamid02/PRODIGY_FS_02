@@ -11,6 +11,8 @@ export const getDepartments = async (
 ) => {
   try {
     const { page = 1, per_page = 10, paginated = false } = req.query
+    const isPaginated = Boolean(paginated)
+
     //get departments with employees, manager and employees count
     const departments = await prisma.department.findMany({
       orderBy: { name: 'asc' },
@@ -57,14 +59,14 @@ export const getDepartments = async (
           },
         },
       },
-      skip: paginated ? (Number(page) - 1) * Number(per_page) : 0,
-      take: paginated ? Number(per_page) : undefined,
+      skip: isPaginated ? (Number(page) - 1) * Number(per_page) : 0,
+      take: isPaginated ? Number(per_page) : undefined,
     })
 
     let total = 0,
       totalPages = 0
 
-    if (paginated) {
+    if (isPaginated) {
       total = await prisma.department.count()
       totalPages = Math.ceil(total / Number(per_page))
     }

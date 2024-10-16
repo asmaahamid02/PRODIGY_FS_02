@@ -88,17 +88,18 @@ export const getRoles = async (
 ) => {
   try {
     const { page = 1, per_page = 10, paginated = false } = req.query
+    const isPaginated = Boolean(paginated)
 
     const roles = await prisma.role.findMany({
-      skip: paginated ? (Number(page) - 1) * Number(per_page) : 0,
-      take: paginated ? Number(per_page) : undefined,
+      skip: isPaginated ? (Number(page) - 1) * Number(per_page) : 0,
+      take: isPaginated ? Number(per_page) : undefined,
       orderBy: { title: 'asc' },
     })
 
     let total = 0,
       totalPages = 0
 
-    if (paginated) {
+    if (isPaginated) {
       total = await prisma.role.count()
       totalPages = Math.ceil(total / Number(per_page))
     }
