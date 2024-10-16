@@ -123,7 +123,10 @@ export const createEmployee = async (
             firstName,
             lastName,
             email,
-            password: hashSync('Password123', 10),
+            password: hashSync(
+              process.env.DEFAULT_EMPLOYEE_PASSWORD as string,
+              10
+            ),
             role: 'user',
           },
         },
@@ -287,6 +290,117 @@ export const deleteEmployee = async (
     res.status(200).json({
       message: 'Employee deleted successfully',
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getEmployee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params
+    console.log('Employee ID:', id)
+
+    const existed = await prisma.user.findUnique({
+      where: { id },
+    })
+
+    if (!existed || !existed.employeeId) {
+      throw new BadRequestError({
+        errors: [{ message: 'Employee not found' }],
+      })
+    }
+
+    const employee = await prisma.employee.findUnique({
+      where: {
+        id: existed.employeeId,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        department: {
+          select: {
+            id: true,
+            name: true,
+            manager: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+            employees: {
+              where: {
+                id: {
+                  not: existed.employeeId,
+                },
+              },
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        role: {
+          select: {
+            title: true,
+          },
+        },
+        manager: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
+        //include users managed by the employee
+        subordinates: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            role: {
+              select: {
+                title: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    res.status(200).json({ data: { employee } })
   } catch (error) {
     next(error)
   }

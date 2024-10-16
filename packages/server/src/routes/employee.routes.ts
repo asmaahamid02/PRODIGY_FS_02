@@ -6,6 +6,7 @@ import { validateRequest } from '../middlewares/validation.middleware'
 import {
   createEmployee,
   deleteEmployee,
+  getEmployee,
   getEmployees,
   updateEmployee,
 } from '../controllers/employee.controller'
@@ -13,6 +14,7 @@ import {
 const router = Router()
 
 router.get('/', authMiddleware, isAdmin, getEmployees)
+router.get('/show/:id', authMiddleware, getEmployee)
 router.post(
   '/',
   authMiddleware,
