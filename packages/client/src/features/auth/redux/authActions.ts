@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { ILoginRequest } from '@staffsphere/shared/src/types/requests.types'
-import { getUserService, loginService } from '../services'
+import { getUserService, loginService, logoutService } from '../services'
 
 export const login = createAsyncThunk(
   'login',
@@ -20,6 +20,17 @@ export const getUser = createAsyncThunk(
     try {
       const response = await getUserService()
       return response
+    } catch (error) {
+      return rejectWithValue(error)
+    }
+  }
+)
+
+export const logout = createAsyncThunk(
+  'logout',
+  async (_: undefined, { rejectWithValue }) => {
+    try {
+      await logoutService()
     } catch (error) {
       return rejectWithValue(error)
     }

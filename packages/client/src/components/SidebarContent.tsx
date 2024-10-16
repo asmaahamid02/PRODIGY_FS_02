@@ -1,8 +1,10 @@
 import {
+  Button,
   CloseButton,
   Flex,
   Text,
   useColorModeValue,
+  useToast,
   VStack,
   type BoxProps,
 } from '@chakra-ui/react'
@@ -12,12 +14,31 @@ import { FiHome, FiUsers } from 'react-icons/fi'
 import { FaStaylinked } from 'react-icons/fa'
 import { BsBuildingGear } from 'react-icons/bs'
 import { GrUserSettings } from 'react-icons/gr'
+import { RiLogoutCircleLine } from 'react-icons/ri'
+import { useAppDispatch } from '../store/hooks'
+import { logout } from '../features/auth/redux/authActions'
+import { errorMessage } from '../utils/error.utils'
 
 type TProps = {
   onClose: () => void
 } & BoxProps
 
 const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
+  const dispatch = useAppDispatch()
+  const toast = useToast()
+
+  const logoutUser = async () => {
+    try {
+      await dispatch(logout()).unwrap()
+    } catch (error) {
+      console.log('🚀 ~ Logout ~ error:', error)
+      toast({
+        title: errorMessage(error),
+        status: 'error',
+      })
+    }
+  }
+
   return (
     <VStack
       bg={useColorModeValue('white', 'gray.900')}
@@ -72,6 +93,18 @@ const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
         <NavItem to={'/departments'} icon={BsBuildingGear}>
           Departments
         </NavItem>
+        <Button
+          variant={'ghost'}
+          colorScheme='purple'
+          alignItems={'center'}
+          display={'flex'}
+          gap={2}
+          fontSize={'lg'}
+          onClick={logoutUser}
+        >
+          <RiLogoutCircleLine />
+          Logout
+        </Button>
       </VStack>
     </VStack>
   )

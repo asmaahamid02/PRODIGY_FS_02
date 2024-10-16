@@ -24,3 +24,7 @@ export const getUserService = async (): Promise<IGetUserResponse> => {
   const response = await axiosInstance.get('/users')
   return response.data
 }
+
+export const logoutService = async (): Promise<void> => {
+  await axiosInstance.post('/auth/logout')
+}

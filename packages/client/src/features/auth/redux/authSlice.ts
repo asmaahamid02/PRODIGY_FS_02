@@ -1,7 +1,7 @@
 import { IGetUserResponse, ILoginResponse } from './../services/index'
 import { IUser } from '@staffsphere/shared/src/types/user.types'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { getUser, login } from './authActions'
+import { getUser, login, logout } from './authActions'
 
 interface IAuthState {
   user?: IUser | null
@@ -55,6 +55,17 @@ const authSlice = createSlice({
         }
       )
       .addCase(getUser.rejected, (state) => {
+        state.status = 'failed'
+      })
+      .addCase(logout.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.isAuthenticated = false
+        state.user = null
+        state.status = 'idle'
+      })
+      .addCase(logout.rejected, (state) => {
         state.status = 'failed'
       })
   },
