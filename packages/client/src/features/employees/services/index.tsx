@@ -18,7 +18,7 @@ export const getAll = async (
   let url = '/employees'
 
   if (paginated) {
-    url += `?page=${page}&per_page=${per_page}`
+    url += `?page=${page}&per_page=${per_page}&paginated=${paginated}`
   }
 
   const response = await axiosInstance.get(url, { withCredentials: true })

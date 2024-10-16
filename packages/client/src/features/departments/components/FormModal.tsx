@@ -59,7 +59,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
   })
 
   const { data, isLoading } = useQuery({
-    queryKey: [QUERY_KEYS.EMPLOYEES],
+    queryKey: [QUERY_KEYS.EMPLOYEES, 'get-all'],
     queryFn: () => getAll(),
   })
 
@@ -131,7 +131,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                     )}
                   </Field>
 
-                  <Field Name='managerId'>
+                  <Field name='managerId'>
                     {({ field, form }) => (
                       <FormControl
                         mt={4}
@@ -140,7 +140,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                         }
                       >
                         <FormLabel htmlFor='managerId'>Manager</FormLabel>
-                        <Input {...field} id='managerId' as={Select}>
+                        <Select {...field} id='managerId'>
                           {data && data.data.employees.length > 0 ? (
                             <>
                               <option value={''}>Select manager</option>
@@ -154,7 +154,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                           ) : (
                             <option value=''>No managers</option>
                           )}
-                        </Input>
+                        </Select>
                         <FormErrorMessage>
                           {form.errors.managerId}
                         </FormErrorMessage>

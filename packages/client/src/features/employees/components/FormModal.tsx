@@ -113,7 +113,9 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                       lastName: record.user.lastName,
                       email: record.user.email,
                       phone: record.phone ?? '',
-                      hireDate: record.hireDate,
+                      hireDate: record.hireDate
+                        ? new Date(record.hireDate).toISOString().split('T')[0]
+                        : '',
                       jobTitle: record.jobTitle,
                       salary: record.salary,
                       roleId: record.roleId ?? '',
@@ -272,7 +274,7 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                     </Field>
                   </HStack>
 
-                  <Field Name='departmentId'>
+                  <Field name='departmentId'>
                     {({ field, form }) => (
                       <FormControl
                         mt={4}
@@ -304,14 +306,14 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                   </Field>
 
                   <HStack>
-                    <Field Name='roleId'>
+                    <Field name='roleId'>
                       {({ field, form }) => (
                         <FormControl
                           mt={4}
                           isInvalid={form.errors.roleId && form.touched.roleId}
                         >
                           <FormLabel htmlFor='roleId'>Role</FormLabel>
-                          <Input {...field} id='roleId' as={Select}>
+                          <Select {...field} id='roleId'>
                             {roles && roles.data.roles?.length > 0 ? (
                               <>
                                 <option value={''}>Select role</option>
@@ -324,14 +326,14 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                             ) : (
                               <option value=''>No roles</option>
                             )}
-                          </Input>
+                          </Select>
                           <FormErrorMessage>
                             {form.errors.roleId}
                           </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
-                    <Field Name='managerId'>
+                    <Field name='managerId'>
                       {({ field, form }) => (
                         <FormControl
                           mt={4}

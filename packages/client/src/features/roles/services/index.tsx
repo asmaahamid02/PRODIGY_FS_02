@@ -16,7 +16,7 @@ export const getAll = async (
   let url = '/roles'
 
   if (paginated) {
-    url += `?page=${page}&per_page=${per_page}`
+    url += `?page=${page}&per_page=${per_page}&paginated=${paginated}`
   }
 
   const response = await axiosInstance.get(url, { withCredentials: true })
