@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
     "build": "tsc -p . -w",
     "generate": "npx prisma generate",
-    "migrate": "npx prisma migrate dev",
+    "migrate": "npx prisma migrate dev --name init",
     "compile": "npm run generate && npm run migrate && tsc -p .",
     "seed": "ts-node prisma/seed.ts"
   },
