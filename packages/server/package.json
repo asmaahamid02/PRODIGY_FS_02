@@ -4,11 +4,12 @@
   "main": "dist/src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "npx prisma generate",
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
     "build": "tsc -p . -w",
-    "compile": "npx prisma db push && npx prisma generate && tsc -p .",
-    "migrate": "npx prisma migrate dev --name init"
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate dev",
+    "compile": "npm run generate && npm run migrate && tsc -p .",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,8 +23,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "redis": "^4.7.0"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
