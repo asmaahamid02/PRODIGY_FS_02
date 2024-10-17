@@ -79,7 +79,7 @@ const SidebarContent: React.FC<TProps> = ({ onClose, ...rest }) => {
         </NavItem>
         <Button
           variant={'ghost'}
-          colorScheme='purple'
+          colorScheme='red'
           alignItems={'center'}
           display={'flex'}
           gap={2}

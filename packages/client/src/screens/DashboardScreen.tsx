@@ -17,6 +17,7 @@ import { errorMessage } from '../utils/error.utils'
 import LoadingSkeleton from '../components/LoadingSkeleton'
 import { useAppSelector } from '../store/hooks'
 import { selectUser } from '../features/auth/redux/authSelectors'
+import { formatNumber } from '../utils/helper.utils'
 
 const DashboardScreen = () => {
   const toast = useToast()
@@ -120,6 +121,23 @@ const DashboardScreen = () => {
         <DashboardCard title='employees' count={totalEmployees} />
       </Grid>
 
+      <VStack
+        my={4}
+        border={'1px'}
+        borderColor={'gray.200'}
+        p={6}
+        rounded={'md'}
+        color={'gray.600'}
+      >
+        <Heading as={'h2'} size={{ base: 'md', md: 'lg' }}>
+          Total expenses
+        </Heading>
+
+        <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight={'bold'}>
+          ${formatNumber(totalExpenses) ?? 0}
+        </Text>
+      </VStack>
+
       <Box mt={12}>
         <Heading
           as='h2'
@@ -128,23 +146,6 @@ const DashboardScreen = () => {
         >
           Last 30 days
         </Heading>
-
-        <VStack
-          my={4}
-          border={'1px'}
-          borderColor={'gray.200'}
-          p={6}
-          rounded={'md'}
-          color={'gray.600'}
-        >
-          <Heading as={'h2'} size={{ base: 'md', md: 'lg' }}>
-            Total expenses
-          </Heading>
-
-          <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight={'bold'}>
-            ${totalExpenses}
-          </Text>
-        </VStack>
 
         <Grid
           templateColumns={{

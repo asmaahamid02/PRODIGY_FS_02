@@ -22,6 +22,7 @@ import { QUERY_KEYS } from '../../../utils/constants.utils'
 import { getAll, IGetDepartmentsResponse } from '../services'
 import DeleteRecord from './DeleteRecord'
 import EditRecord from './EditRecord'
+import { formatNumber } from '../../../utils/helper.utils'
 
 const List = () => {
   const toast = useToast()
@@ -87,7 +88,7 @@ const List = () => {
                   <Tr key={row.id}>
                     <Td isNumeric>{index + 1}</Td>
                     <Td>{row.name}</Td>
-                    <Td>${row.budget}</Td>
+                    <Td>${formatNumber(row.budget)}</Td>
                     <Td>
                       {row.manager ? (
                         <VStack align={'start'}>

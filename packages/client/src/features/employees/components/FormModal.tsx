@@ -342,22 +342,21 @@ const FormModal: FC<TProps> = ({ isOpen, onClose, record }) => {
                           }
                         >
                           <FormLabel htmlFor='managerId'>Manager</FormLabel>
-                          <Input {...field} id='managerId' as={Select}>
+                          <Select {...field} id='managerId'>
                             {employees &&
                             employees.data.employees?.length > 0 ? (
                               <>
                                 <option value={''}>Select manager</option>
                                 {employees.data.employees.map((employee) => (
-                                  <option
-                                    key={employee.id}
-                                    value={employee.id}
-                                  >{`${employee.user.firstName} ${employee.user.lastName}`}</option>
+                                  <option key={employee.id} value={employee.id}>
+                                    {`${employee.user.firstName} ${employee.user.lastName}`}
+                                  </option>
                                 ))}
                               </>
                             ) : (
                               <option value=''>No managers</option>
                             )}
-                          </Input>
+                          </Select>
                           <FormErrorMessage>
                             {form.errors.managerId}
                           </FormErrorMessage>
