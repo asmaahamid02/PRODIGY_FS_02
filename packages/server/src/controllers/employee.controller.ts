@@ -3,6 +3,7 @@ import { prisma } from '..'
 import { IEmployeeRequest } from '@staffsphere/shared/src/types/requests.types'
 import BadRequestError from '../errors/badReqError'
 import { hashSync } from 'bcryptjs'
+import NotFoundError from '../errors/notFoundError'
 
 export const getEmployees = async (
   req: Request,
@@ -302,17 +303,33 @@ export const getEmployee = async (
 ) => {
   try {
     const { id } = req.params
-    console.log('Employee ID:', id)
 
     const existed = await prisma.user.findUnique({
       where: { id },
     })
 
     if (!existed || !existed.employeeId) {
-      throw new BadRequestError({
+      throw new NotFoundError({
         errors: [{ message: 'Employee not found' }],
       })
     }
+
+    const employeeDetails = await prisma.employee.findUnique({
+      where: { id: existed.employeeId },
+      select: {
+        id: true,
+        managerId: true,
+      },
+    })
+
+    if (!employeeDetails) {
+      throw new NotFoundError({
+        errors: [{ message: 'Employee not found' }],
+      })
+    }
+
+    const { managerId } = employeeDetails
+    console.log('ManagerID', managerId)
 
     const employee = await prisma.employee.findUnique({
       where: {
@@ -345,9 +362,10 @@ export const getEmployee = async (
             },
             employees: {
               where: {
-                id: {
-                  not: existed.employeeId,
-                },
+                NOT: [
+                  { id: existed.employeeId },
+                  managerId ? { id: managerId } : {},
+                ],
               },
               include: {
                 user: {
