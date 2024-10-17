@@ -328,12 +328,12 @@ export const getEmployee = async (
       })
     }
 
-    const { managerId } = employeeDetails
+    const { id: employeeId, managerId } = employeeDetails
     console.log('ManagerID', managerId)
 
     const employee = await prisma.employee.findUnique({
       where: {
-        id: existed.employeeId,
+        id: employeeId,
       },
       include: {
         user: {
@@ -362,10 +362,7 @@ export const getEmployee = async (
             },
             employees: {
               where: {
-                NOT: [
-                  { id: existed.employeeId },
-                  managerId ? { id: managerId } : {},
-                ],
+                NOT: [{ id: employeeId }, managerId ? { id: managerId } : {}],
               },
               include: {
                 user: {
